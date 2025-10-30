@@ -1,0 +1,47 @@
+/* Harbor Sinking Funds - main stylesheet
+   Keep Tailwind utilities in HTML via CDN; only regular CSS here. */
+
+:root {
+  --harbor-blue: #2563eb; /* blue-600 */
+  --harbor-amber: #f59e0b; /* amber-500 */
+  --harbor-rose: #f43f5e; /* rose-500 */
+  --ring: 3px;
+}
+
+html:focus-within { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/***** Editorial touches *****/
+blockquote { quotes: "\201C" "\201D" "\2018" "\2019"; }
+blockquote p::before { content: open-quote; margin-right: 2px; color: #94a3b8; }
+blockquote p::after { content: close-quote; margin-left: 2px; color: #94a3b8; }
+
+/***** Utility overrides *****/
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/***** Chart helpers *****/
+.donut { position: relative; width: 12rem; height: 12rem; }
+.donut svg { display: block; }
+
+/***** Modal helpers *****/
+#categoryModal[aria-modal="true"].hidden,
+#ledgerModal[aria-modal="true"].hidden { display: none; }
+
+/***** Table responsive *****/
+@media (max-width: 640px) {
+  table thead { display: none; }
+  table tr { display: block; border-bottom: 1px solid #e5e7eb; padding: 8px 0; }
+  table td { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+  table td::before { content: attr(data-label); font-weight: 600; color: #64748b; }
+}
+
+/***** Focus ring for custom elements *****/
+[role="button"], button, a { outline-color: var(--harbor-blue); }
+
+/***** Toast *****/
+#toast.show { display: block; animation: toastIn 200ms ease-out; }
+@keyframes toastIn { from { transform: translate(-50%, 10px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }

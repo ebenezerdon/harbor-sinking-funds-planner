@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Harbor Planner</title>
+  <meta name="description" content="Track sinking funds with categories, targets, and progress charts.">
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 md:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2" aria-label="Back to landing">
+          <span class="h-8 w-8 rounded-md bg-blue-600 inline-flex items-center justify-center text-white font-bold">H</span>
+          <span class="font-semibold tracking-tight hidden sm:block">Harbor</span>
+        </a>
+        <span class="hidden md:inline-flex ml-3 chip">Sinking Funds Planner</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnAdd" class="btn-primary">New Category</button>
+        <button id="btnExport" class="btn-secondary" title="Export data">Export</button>
+        <label class="btn-secondary cursor-pointer" for="importFile">Import<input id="importFile" type="file" accept="application/json" class="sr-only"></label>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 md:px-8 py-8">
+    <!-- Overview -->
+    <section class="grid gap-6 md:grid-cols-3">
+      <div class="card p-6 md:col-span-2">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold">Your funds at a glance</h1>
+            <p class="text-slate-600 mt-1">Track progress across every category with live totals.</p>
+          </div>
+          <div class="flex items-center gap-2" aria-label="Keyboard hint">
+            <span class="kbd">/</span>
+            <span class="text-sm text-slate-600">to search</span>
+          </div>
+        </div>
+        <div class="mt-6 grid sm:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-sm text-slate-500">Saved</p>
+            <p id="statSaved" class="text-2xl font-bold mt-1">$0</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-sm text-slate-500">Targets</p>
+            <p id="statTargets" class="text-2xl font-bold mt-1">$0</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-sm text-slate-500">Overall</p>
+            <p id="statOverall" class="text-2xl font-bold mt-1">0%</p>
+          </div>
+        </div>
+      </div>
+      <div class="card p-6 flex items-center justify-center">
+        <div class="w-48 h-48 relative" aria-label="Overall progress chart">
+          <div id="overallChart" class="w-48 h-48"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <div id="overallPct" class="text-2xl font-extrabold">0%</div>
+              <div class="text-xs text-slate-500">funded</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <section class="mt-8 card p-4 md:p-5">
+      <div class="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
+        <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <label for="search" class="sr-only">Search</label>
+          <div class="relative w-full sm:w-72">
+            <input id="search" class="input pl-9" placeholder="Search categories" type="search" autocomplete="off">
+            <svg class="absolute left-3 top-2.5 h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 21l-4.35-4.35"/><circle cx="10" cy="10" r="7"/></svg>
+          </div>
+          <div>
+            <label for="sort" class="sr-only">Sort</label>
+            <select id="sort" class="input sm:w-56">
+              <option value="recent">Sort: Recently updated</option>
+              <option value="name-asc">Sort: Name A to Z</option>
+              <option value="name-desc">Sort: Name Z to A</option>
+              <option value="progress-desc">Sort: Progress high to low</option>
+              <option value="progress-asc">Sort: Progress low to high</option>
+              <option value="target-desc">Sort: Target high to low</option>
+              <option value="target-asc">Sort: Target low to high</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btnClearFilters" class="btn-secondary">Clear filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category list -->
+    <section class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="categoryList" aria-live="polite"></section>
+  </main>
+
+  <!-- Category Modal -->
+  <div id="categoryModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="catTitle">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="absolute inset-0 overflow-y-auto">
+      <div class="min-h-full flex items-end sm:items-center justify-center p-4">
+        <div class="card w-full sm:max-w-lg p-6 relative">
+          <button class="absolute right-4 top-4 text-slate-500 hover:text-slate-700" data-close-cat aria-label="Close">✕</button>
+          <h3 id="catTitle" class="text-xl font-bold">New Category</h3>
+          <form id="categoryForm" class="mt-4 space-y-4">
+            <input type="hidden" id="catId">
+            <div>
+              <label class="label" for="catName">Name</label>
+              <input id="catName" class="input" required maxlength="60" placeholder="e.g., Emergency Car Repairs">
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="label" for="catTarget">Target amount</label>
+                <input id="catTarget" class="input" inputmode="decimal" placeholder="e.g., 1500" required>
+              </div>
+              <div>
+                <label class="label" for="catMonthly">Monthly contribution</label>
+                <input id="catMonthly" class="input" inputmode="decimal" placeholder="e.g., 125">
+              </div>
+            </div>
+            <div>
+              <label class="label">Color</label>
+              <div id="colorPick" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div>
+              <label class="label" for="catNotes">Notes</label>
+              <textarea id="catNotes" class="input" rows="3" placeholder="Optional notes"></textarea>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <button class="btn-secondary" type="button" data-close-cat>Cancel</button>
+              <button class="btn-primary" type="submit">Save Category</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ledger Modal -->
+  <div id="ledgerModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="ledgerTitle">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="absolute inset-0 overflow-y-auto">
+      <div class="min-h-full flex items-end sm:items-center justify-center p-4">
+        <div class="card w-full sm:max-w-2xl p-6 relative">
+          <button class="absolute right-4 top-4 text-slate-500 hover:text-slate-700" data-close-ledger aria-label="Close">✕</button>
+          <div class="flex items-center justify-between">
+            <h3 id="ledgerTitle" class="text-xl font-bold">Ledger</h3>
+            <div class="pill"><span class="w-2 h-2 rounded-full bg-slate-400"></span><span id="ledgerCatName">Category</span></div>
+          </div>
+          <div class="mt-4">
+            <form id="txForm" class="grid md:grid-cols-4 gap-3">
+              <input type="hidden" id="txCatId">
+              <div class="md:col-span-1">
+                <label class="label" for="txType">Type</label>
+                <select id="txType" class="input">
+                  <option value="deposit">Deposit</option>
+                  <option value="withdraw">Withdraw</option>
+                </select>
+              </div>
+              <div class="md:col-span-1">
+                <label class="label" for="txAmount">Amount</label>
+                <input id="txAmount" class="input" inputmode="decimal" placeholder="0.00" required>
+              </div>
+              <div class="md:col-span-1">
+                <label class="label" for="txDate">Date</label>
+                <input id="txDate" class="input" type="date">
+              </div>
+              <div class="md:col-span-1">
+                <label class="label" for="txNote">Note</label>
+                <input id="txNote" class="input" maxlength="80" placeholder="Optional">
+              </div>
+              <div class="md:col-span-4 flex items-center justify-end gap-2">
+                <button type="button" class="btn-secondary" data-close-ledger>Close</button>
+                <button type="submit" class="btn-primary">Add Transaction</button>
+              </div>
+            </form>
+          </div>
+          <div class="mt-6">
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead>
+                  <tr class="text-slate-500">
+                    <th class="py-2 pr-6">Date</th>
+                    <th class="py-2 pr-6">Type</th>
+                    <th class="py-2 pr-6">Amount</th>
+                    <th class="py-2 pr-6">Note</th>
+                    <th class="py-2 pr-2 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="txTable" class="align-top"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden">
+    <div class="rounded-full bg-slate-900 text-white px-4 py-2 text-sm shadow-lg" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="scripts/helpers.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>

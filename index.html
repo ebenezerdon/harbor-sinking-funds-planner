@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Harbor | Sinking Funds Planner</title>
+  <meta name="description" content="Plan, visualize, and reach your sinking fund goals with beautiful charts and effortless tracking.">
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style type="text/tailwindcss" data-teda="tailwind-apply">
+    @layer components {
+      .btn-primary { @apply inline-flex items-center justify-center rounded-full bg-blue-600 text-white px-5 py-3 text-sm md:text-base font-semibold shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 active:scale-[0.98] transition; }
+      .btn-secondary { @apply inline-flex items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200 transition; }
+      .link-cta { @apply text-blue-700 hover:text-blue-800 underline decoration-2 underline-offset-4; }
+      .chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-slate-100 text-slate-700; }
+      .card { @apply rounded-2xl bg-white shadow-lg ring-1 ring-slate-100; }
+      .input { @apply w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400; }
+      .label { @apply block text-sm font-medium text-slate-700 mb-1; }
+      .nav-link { @apply text-sm text-slate-700 hover:text-slate-900; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+  <header class="px-5 md:px-10 pt-6 pb-2 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2" aria-label="Harbor Home">
+      <span class="h-8 w-8 rounded-md bg-blue-600 inline-flex items-center justify-center text-white font-bold">H</span>
+      <span class="font-semibold tracking-tight">Harbor</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#design" class="nav-link">Design</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="app.html" class="btn-primary">Open the Planner</a>
+    </nav>
+    <a href="app.html" class="md:hidden btn-primary">Open</a>
+  </header>
+
+  <main id="top">
+    <!-- HERO: editorial, asymmetric, typographic -->
+    <section class="relative overflow-hidden pt-8 md:pt-16">
+      <div class="absolute -top-16 -left-10 h-64 w-64 rotate-[12deg] rounded-3xl bg-rose-200/60 blur-2xl pointer-events-none"></div>
+      <div class="absolute top-24 -right-10 h-72 w-72 -rotate-[8deg] rounded-3xl bg-amber-100 blur-xl pointer-events-none"></div>
+
+      <div class="mx-auto max-w-6xl px-5 md:px-10">
+        <p class="chip mb-6 md:mb-10">Money you can trust yourself with</p>
+
+        <div class="relative">
+          <h1 class="leading-[0.95] font-black tracking-tight text-[10vw] md:text-[7rem]" style="word-spacing:0.1em">
+            Make big purchases feel small.
+          </h1>
+          <blockquote class="absolute -right-1 md:-right-8 top-10 md:top-16 w-40 md:w-64 rotate-2 card p-4 text-sm md:text-base">
+            <span class="block text-slate-500">Pull quote</span>
+            <p class="mt-1 font-semibold">“I funded my wedding and a new laptop without panic.”</p>
+            <cite class="mt-2 block text-slate-500">A real Harbor user</cite>
+          </blockquote>
+        </div>
+
+        <div class="mt-8 md:mt-12 max-w-3xl">
+          <p class="text-lg md:text-2xl text-slate-700 leading-relaxed">
+            Harbor turns your goals into calm, automatic sinking funds. Set targets, add contributions, and watch elegant charts fill like tide rolling in.
+          </p>
+        </div>
+
+        <div class="mt-8 md:mt-12 flex flex-wrap items-center gap-3">
+          <a href="app.html" class="btn-primary">Start a fund in 30 seconds</a>
+          <a href="#features" class="btn-secondary">Explore features</a>
+        </div>
+
+        <div class="relative mt-14 md:mt-20">
+          <div class="card p-4 md:p-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div class="flex-1">
+                <p class="text-sm uppercase tracking-widest text-slate-500">Live Preview</p>
+                <p class="mt-1 font-semibold">Your Vacation Fund</p>
+                <div class="mt-4 h-2.5 w-full rounded-full bg-slate-200">
+                  <div class="h-2.5 rounded-full bg-blue-600 transition-all" style="width: 58%"></div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-sm text-slate-600">
+                  <span>$2,900 saved</span>
+                  <span>of $5,000 target</span>
+                </div>
+              </div>
+              <div class="w-40 h-40 mx-auto md:mx-0 relative">
+                <svg viewBox="0 0 120 120" class="w-40 h-40">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#e5e7eb" stroke-width="12"></circle>
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#2563eb" stroke-width="12" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="137" transform="rotate(-90 60 60)"></circle>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-2xl font-bold">58%</div>
+                    <div class="text-xs text-slate-500">to shore</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features: asymmetric blocks -->
+    <section id="features" class="mt-20 md:mt-28 mx-auto max-w-6xl px-5 md:px-10 space-y-12">
+      <div class="flex flex-col gap-8">
+        <div class="max-w-2xl">
+          <h2 class="text-3xl md:text-5xl font-extrabold leading-tight">Design for clarity, built for consistency.</h2>
+        </div>
+        <div class="space-y-10">
+          <div class="card p-6 md:p-8 relative overflow-hidden">
+            <span class="absolute top-4 right-4 text-xs font-medium bg-amber-100 text-amber-800 px-2 py-1 rounded">Visual</span>
+            <h3 class="text-xl md:text-2xl font-semibold">Donut and bar charts that tell the truth</h3>
+            <p class="mt-2 text-slate-600">Beautiful, legible charts without noise. Your percentages are rendered as precise SVG arcs and accessible progress bars.</p>
+          </div>
+          <div class="md:ml-20 card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-semibold">Targets, deposits, and withdrawals</h3>
+            <p class="mt-2 text-slate-600">Add categories, set targets, and record transactions. Every change updates totals instantly and persists automatically.</p>
+          </div>
+          <div class="md:mr-28 card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-semibold">Forecast your finish line</h3>
+            <p class="mt-2 text-slate-600">Enter a monthly contribution to see a projected completion date so surprises never sneak up again.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="design" class="mt-20 md:mt-28 mx-auto max-w-6xl px-5 md:px-10">
+      <div class="card p-8 md:p-12">
+        <div class="flex flex-col md:flex-row gap-10 items-start">
+          <div class="md:w-[70%]">
+            <h2 class="text-3xl md:text-5xl font-extrabold">Editorial layout. Product focus.</h2>
+            <p class="mt-4 text-slate-600">Harbor borrows from magazine design: generous white space, bold typography, and asymmetry that rewards exploration. It is usable, accessible, and fast.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <span class="chip">Keyboard friendly</span>
+              <span class="chip">Local-first</span>
+              <span class="chip">Responsive</span>
+              <span class="chip">No sign up</span>
+            </div>
+            <div class="mt-8">
+              <a href="app.html" class="btn-primary">Plan my funds</a>
+              <a href="#faq" class="btn-secondary ml-2">Questions</a>
+            </div>
+          </div>
+          <aside class="md:w-[30%]">
+            <blockquote class="text-xl font-semibold leading-snug">
+              “Design that feels calm is design you will return to.”
+            </blockquote>
+            <p class="mt-3 text-slate-500">Our guiding principle for Harbor’s interface.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="mt-20 md:mt-28 mx-auto max-w-4xl px-5 md:px-10">
+      <h2 class="text-2xl md:text-4xl font-extrabold">FAQ</h2>
+      <div class="mt-8 space-y-6">
+        <details class="card p-5">
+          <summary class="font-semibold cursor-pointer">Where is my data stored?</summary>
+          <p class="mt-3 text-slate-600">All data is stored locally in your browser using localStorage. You can export or import a backup anytime.</p>
+        </details>
+        <details class="card p-5">
+          <summary class="font-semibold cursor-pointer">Do I need an account?</summary>
+          <p class="mt-3 text-slate-600">No accounts. No tracking. Just open the planner and start saving.</p>
+        </details>
+      </div>
+      <div class="mt-10">
+        <a href="app.html" class="btn-primary">Open the Planner</a>
+      </div>
+    </section>
+
+    <footer class="mt-24 md:mt-32 border-t border-slate-200">
+      <div class="mx-auto max-w-6xl px-5 md:px-10 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-sm text-slate-500">Built for clarity. Designed with care.</p>
+        <div class="flex items-center gap-4 text-sm">
+          <a class="link-cta" href="README.md">Readme</a>
+          <a class="link-cta" href="app.html">Use the app</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+  <script src="scripts/helpers.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
